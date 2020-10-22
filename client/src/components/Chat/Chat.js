@@ -4,6 +4,7 @@ import io from 'socket.io-client'
 import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Input'
 import Messages from '../Messages/Messages'
+import onlineIcon from '../../icons/onlineIcon.png'
 import './Chat.css';
 let socket;
 
@@ -12,7 +13,8 @@ function Chat({location}) {
    const [room, setRoom] = useState("")
    const [message, setMessage] = useState("")
    const [messages, setMessages] = useState([])
-   const ENDPOINT = 'localhost:5000'
+   const [members, setMembers] = useState([])
+   const ENDPOINT = 'https://react-room-chat-application.herokuapp.com/'
 
    useEffect(() => {
       const { name, room } = queryString.parse(location.search)
@@ -22,8 +24,10 @@ function Chat({location}) {
       setName(name)
       setRoom(room)
 
-      socket.emit('join', { name, room }, () => {
-         
+      socket.emit('join', { name, room }, (error) => {
+         if(error) {
+            alert(error);
+         }
       })
 
 
@@ -37,7 +41,19 @@ function Chat({location}) {
       socket.on('message', (message) => {
          setMessages([...messages, message])
       })
+
+      socket.on('roomData', ({room, users}) => {
+         setMembers(users)
+         console.log('members', users)
+      } )
    }, [messages])
+
+   // useEffect(() => {
+   //    socket.on('roomData', ({room, users}) => {
+   //       setMembers(users)
+   //       console.log('members', users)
+   //    } )
+   // }, [members])
 
    // function for sending messages
    const sendMessage = (e) => {
@@ -52,14 +68,25 @@ function Chat({location}) {
       <div className="outerContainer">
          <div className="container">
             <InfoBar room={room}/>
-            <Messages />
+            <Messages messages={messages} name={name} />
             <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-
-            {/* <input value={message} 
-               onChange={(e) => setMessage(e.target.value)} 
-               onKeyPress={(e) => e.key === "Enter" ? sendMessage(e) : null}/> */}
-            
          </div>
+         <div className="userInRoom">
+            <div className="navbar">
+               <h3>Members</h3>
+            </div>
+            <div className="members">
+               <ul>
+                  {
+                     members.map((member, i) => (
+                        <li key={i}> 
+                           <img className="onlineIcon" src={onlineIcon} alt="online" /> { member.name}
+                        </li> )
+                     )
+                  }
+               </ul>
+            </div>
+         </div> 
       </div>
    )
 }

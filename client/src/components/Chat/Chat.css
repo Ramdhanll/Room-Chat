@@ -17,8 +17,48 @@ body {
    justify-content: space-between;
    background: #fff;
    border-radius: 8px;
-   height: 60%;
-   width: 35%;
+   height: 75%;
+   width: 30%;
+}
+
+.userInRoom {
+   display: flex;
+   height: 75%;
+   width: 10%;
+   background: rgb(110, 110, 110);
+   margin-left: 10px;
+   color: white;
+   flex-direction: column;
+}
+
+.navbar {
+   height: 60px;
+   width: 100%;
+   text-align: center;
+   background: #2979ff;
+}
+
+.members {
+   display: flex;
+   margin-top: 10px;
+   color: rgb(255, 255, 255);
+   text-decoration: none;
+   font-size: 1.4em;
+   overflow: auto;
+}
+
+.members ul {
+   width: 100%;
+   display: flex;
+   flex: wrap;
+   flex-direction: column;
+   list-style-type: none;
+
+}
+
+.members ul li{
+   text-transform: capitalize;
+   margin-bottom: 8px;
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
